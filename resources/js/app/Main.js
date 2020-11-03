@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function Example() {
+function Main() {
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -17,8 +17,8 @@ function Example() {
     );
 }
 
-export default Example;
+export default Main;
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<Example />, document.getElementById('example'));
+if (document.getElementById('app')) {
+    ReactDOM.render(<Main />, document.getElementById('app'));
 }
