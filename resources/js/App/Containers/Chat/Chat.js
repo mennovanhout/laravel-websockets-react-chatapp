@@ -23,14 +23,19 @@ class Chat extends Component {
         this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
         this.onNewMessage = this.onNewMessage.bind(this);
+        this.scrollToBottom = this.scrollToBottom.bind(this);
     }
 
     componentDidMount() {
+        this.messagesEnd = React.createRef();
+
         this.updateUserList();
         this.updateUserListIntervalID = setInterval(this.updateUserList, 10 * 1000);
 
         axios.get('/messages').then((response) => {
             this.setState({messages: response.data.data});
+
+            this.scrollToBottom(false);
 
             Echo.join('chat')
                 .here((users) => {
@@ -92,6 +97,18 @@ class Chat extends Component {
         messages.push(data);
 
         this.setState({messages: messages});
+
+        this.scrollToBottom();
+    }
+
+    scrollToBottom (smooth = true) {
+        if (!smooth) {
+            this.messagesEnd.scrollIntoView();
+
+            return;
+        }
+
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
     render() {
@@ -102,7 +119,7 @@ class Chat extends Component {
         } else if(this.state.messages === null) {
             messages = [];
             for(let i = 0; i < 15; i++) {
-                messages.push(<Skeleton height="50px" animation="wave" />);
+                messages.push(<Skeleton key={i} height="50px" animation="wave" />);
             }
         }
 
@@ -113,6 +130,7 @@ class Chat extends Component {
                 <div className="messages">
                     <ul>
                         {messages}
+                        <li ref={(el) => { this.messagesEnd = el; }}></li>
                     </ul>
 
                     <div className="input">
