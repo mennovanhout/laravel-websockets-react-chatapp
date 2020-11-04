@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import logo from '../../../../img/logo.png';
 import RightSideMenu from "../../Components/RightSideMenu/RightSideMenu";
+import LeftSideMenu from "../../Components/LeftSideMenu/LeftSideMenu";
+import Message from "../../Components/Chat/Message/Message";
+import TextField from "@material-ui/core/TextField";
 
 class Chat extends Component {
     constructor(props) {
@@ -10,10 +12,14 @@ class Chat extends Component {
 
         this.state = {
             userList: null,
-            onlineUsers: []
+            onlineUsers: [],
+            message: ''
         };
 
         this.updateUserList = this.updateUserList.bind(this);
+        this.handleOnChange = this.handleOnChange.bind(this);
+        this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
     }
 
     componentDidMount() {
@@ -34,7 +40,7 @@ class Chat extends Component {
             .leaving((user) => {
                 let onlineUsers = [...this.state.onlineUsers];
                 onlineUsers = onlineUsers.filter(id => id !== user.id);
-                
+
                 this.setState({onlineUsers: onlineUsers});
             });
     }
@@ -53,13 +59,38 @@ class Chat extends Component {
         });
     }
 
+    handleOnChange(event) {
+        this.setState({[event.target.name]: event.target.value});
+    }
+
+    handleOnKeyDown(event) {
+        if(event.keyCode == 13 && event.shiftKey == false) {
+            this.sendMessage();
+        }
+    }
+
+    sendMessage() {
+        this.setState({message: ''});
+    }
+
     render() {
         return (
             <div className="chat">
-                <div className="leftSideMenu">
-                    <img alt="logo" src={logo} />
-                </div>
+                <LeftSideMenu />
                 <div className="title">Razenet</div>
+                <div className="messages">
+                    <ul>
+                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                    </ul>
+
+                    <div className="input">
+                        <TextField name="message" onKeyDown={this.handleOnKeyDown} onChange={this.handleOnChange} value={this.state.message} fullWidth />
+                    </div>
+                </div>
                 <RightSideMenu userList={this.state.userList} onlineUsers={this.state.onlineUsers} />
             </div>
         );
