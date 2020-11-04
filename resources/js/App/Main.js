@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Login from "./Containers/Login/Login";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {Container} from "@material-ui/core";
+import Chat from "./Containers/Chat/Chat";
 
 class Main extends Component {
     constructor(props) {
@@ -47,7 +48,7 @@ class Main extends Component {
 
         return (
             <Router>
-
+                <Chat />
             </Router>
         );
     }
