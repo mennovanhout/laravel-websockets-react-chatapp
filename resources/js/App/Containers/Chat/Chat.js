@@ -9,7 +9,8 @@ class Chat extends Component {
         this.updateUserListIntervalID = 0;
 
         this.state = {
-            userList: null
+            userList: null,
+            onlineUsers: []
         };
 
         this.updateUserList = this.updateUserList.bind(this);
@@ -17,12 +18,31 @@ class Chat extends Component {
 
     componentDidMount() {
         this.updateUserList();
-
         this.updateUserListIntervalID = setInterval(this.updateUserList, 10 * 1000);
+
+        Echo.join('chat')
+            .here((users) => {
+                const onlineUsers = users.map(user => user.id);
+
+                this.setState({onlineUsers: onlineUsers});
+            })
+            .joining((user) => {
+                const onlineUsers = [...this.state.onlineUsers, user.id];
+
+                this.setState({onlineUsers: onlineUsers});
+            })
+            .leaving((user) => {
+                let onlineUsers = [...this.state.onlineUsers];
+                onlineUsers = onlineUsers.filter(id => id !== user.id);
+                
+                this.setState({onlineUsers: onlineUsers});
+            });
     }
 
     componentWillUnmount() {
         clearInterval(this.updateUserListIntervalID);
+
+        Echo.leave('chat');
     }
 
     updateUserList() {
@@ -40,7 +60,7 @@ class Chat extends Component {
                     <img alt="logo" src={logo} />
                 </div>
                 <div className="title">Razenet</div>
-                <RightSideMenu userList={this.state.userList} />
+                <RightSideMenu userList={this.state.userList} onlineUsers={this.state.onlineUsers} />
             </div>
         );
     }

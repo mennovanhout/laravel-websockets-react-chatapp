@@ -28,7 +28,11 @@ const RightSideMenu = props => {
     );
 
     if (props.userList !== null) {
-        offline = props.userList.map(user => <li key={user.id} className="offline">{user.username}</li>);
+        const onlineUsers = props.userList.filter((user) => {return props.onlineUsers.includes(user.id)});
+        const offlineUsers = props.userList.filter((user) => {return !props.onlineUsers.includes(user.id)});
+
+        online = onlineUsers.map(user => <li key={user.id}>{user.username}</li>);
+        offline = offlineUsers.map(user => <li key={user.id} className="offline">{user.username}</li>);
     }
 
     return (
