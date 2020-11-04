@@ -57,28 +57,40 @@ class Login extends Component {
         values.email = this.state.email;
         delete values.errors;
 
-        axios.post(`/${this.state.form}`, values).then(response => {
-            Object.keys(values).forEach(name => {
-               values[name] = '';
+        //axios.get('/sanctum/csrf-cookie', { baseURL: ''}).then(response => {
+            axios.post(`/${this.state.form}`, values).then(response => {
+                Object.keys(values).forEach(name => {
+                   values[name] = '';
+                });
+                values.errors = null;
+
+                if (this.state.form === 'login') {
+                    // Login success
+
+                    // test login
+                    axios.get('/user').then(response => {
+                        console.log(response);
+                    }).catch(error => {
+                        console.log('sad');
+                    });
+                } else {
+                    // Register success
+                    this.setState({form: 'login', register: values, loading: false, success: response.data.message});
+                }
+            }).catch(error => {
+                if (error.response?.status === 422) {
+                    const form = {...this.state[this.state.form] };
+                    form.errors = error.response.data.errors;
+
+                    this.setState({[this.state.form]: form, loading: false});
+                } else {
+                    console.log(error.message);
+                }
             });
-            values.errors = null;
-
-            if (this.state.form === 'login') {
-                // Login success
-            } else {
-                // Register success
-                this.setState({form: 'login', register: values, loading: false, success: response.data.message});
-            }
-        }).catch(error => {
-            if (error.response?.status === 422) {
-                const form = {...this.state[this.state.form] };
-                form.errors = error.response.data.errors;
-
-                this.setState({[this.state.form]: form, loading: false});
-            } else {
-                console.log(error.message);
-            }
-        })
+        /*}).catch(error => {
+            //@TODO: Serverside error
+            console.log(error);
+        });*/
     }
 
     render() {

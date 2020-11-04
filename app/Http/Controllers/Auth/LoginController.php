@@ -26,7 +26,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Authentication passed...
-            return response()->json(['success' => true]);
+            return response(null, 204);
         } else {
             return response()->json([
                 'errors' => ['email' => ['Credentials incorrect!']]
