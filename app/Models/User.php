@@ -34,6 +34,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read int|null $tokens_count
  */
 class User extends Authenticatable
 {
@@ -58,6 +60,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email',
+        'updated_at',
+        'created_at',
+        'email_verified_at'
     ];
 
     /**

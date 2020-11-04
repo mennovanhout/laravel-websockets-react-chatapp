@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,8 @@ Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/list', [UserController::class, 'list']);
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
+    Route::get('/messages', [ChatController::class, 'retrieve']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();

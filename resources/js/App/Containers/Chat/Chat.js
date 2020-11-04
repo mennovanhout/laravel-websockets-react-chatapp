@@ -3,6 +3,7 @@ import RightSideMenu from "../../Components/RightSideMenu/RightSideMenu";
 import LeftSideMenu from "../../Components/LeftSideMenu/LeftSideMenu";
 import Message from "../../Components/Chat/Message/Message";
 import TextField from "@material-ui/core/TextField";
+import {Skeleton} from "@material-ui/lab";
 
 class Chat extends Component {
     constructor(props) {
@@ -13,36 +14,42 @@ class Chat extends Component {
         this.state = {
             userList: null,
             onlineUsers: [],
-            message: ''
+            message: '',
+            messages: null
         };
 
         this.updateUserList = this.updateUserList.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
+        this.onNewMessage = this.onNewMessage.bind(this);
     }
 
     componentDidMount() {
         this.updateUserList();
         this.updateUserListIntervalID = setInterval(this.updateUserList, 10 * 1000);
 
-        Echo.join('chat')
-            .here((users) => {
-                const onlineUsers = users.map(user => user.id);
+        axios.get('/messages').then((response) => {
+            this.setState({messages: response.data.data});
 
-                this.setState({onlineUsers: onlineUsers});
-            })
-            .joining((user) => {
-                const onlineUsers = [...this.state.onlineUsers, user.id];
+            Echo.join('chat')
+                .here((users) => {
+                    const onlineUsers = users.map(user => user.id);
 
-                this.setState({onlineUsers: onlineUsers});
-            })
-            .leaving((user) => {
-                let onlineUsers = [...this.state.onlineUsers];
-                onlineUsers = onlineUsers.filter(id => id !== user.id);
+                    this.setState({onlineUsers: onlineUsers});
+                })
+                .joining((user) => {
+                    const onlineUsers = [...this.state.onlineUsers, user.id];
 
-                this.setState({onlineUsers: onlineUsers});
-            });
+                    this.setState({onlineUsers: onlineUsers});
+                })
+                .leaving((user) => {
+                    let onlineUsers = [...this.state.onlineUsers];
+                    onlineUsers = onlineUsers.filter(id => id !== user.id);
+
+                    this.setState({onlineUsers: onlineUsers});
+                }).listen('NewMessage', this.onNewMessage);
+        });
     }
 
     componentWillUnmount() {
@@ -70,21 +77,42 @@ class Chat extends Component {
     }
 
     sendMessage() {
+        axios.post('/send-message', {message: this.state.message});
+
         this.setState({message: ''});
     }
 
+    onNewMessage(data) {
+        let messages = [];
+
+        if (this.state.messages) {
+            messages = [...this.state.messages];
+        }
+
+        messages.push(data);
+
+        this.setState({messages: messages});
+    }
+
     render() {
+        let messages = null;
+
+        if (this.state.messages !== null) {
+            messages = this.state.messages.map(message => <Message key={message.id} user={message.user}>{message.message}</Message>);
+        } else if(this.state.messages === null) {
+            messages = [];
+            for(let i = 0; i < 15; i++) {
+                messages.push(<Skeleton height="50px" animation="wave" />);
+            }
+        }
+
         return (
             <div className="chat">
                 <LeftSideMenu />
                 <div className="title">Razenet</div>
                 <div className="messages">
                     <ul>
-                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
-                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
-                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
-                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
-                        <Message user={{id: 1, username: 'SynteX'}}>Test</Message>
+                        {messages}
                     </ul>
 
                     <div className="input">
