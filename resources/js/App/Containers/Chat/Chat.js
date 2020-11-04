@@ -6,16 +6,30 @@ class Chat extends Component {
     constructor(props) {
         super(props);
 
+        this.updateUserListIntervalID = 0;
+
         this.state = {
-            memberList: null
+            userList: null
         };
+
+        this.updateUserList = this.updateUserList.bind(this);
     }
 
     componentDidMount() {
+        this.updateUserList();
+
+        this.updateUserListIntervalID = setInterval(this.updateUserList, 10 * 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.updateUserListIntervalID);
+    }
+
+    updateUserList() {
         axios.get('/users/list').then(response => {
-            this.setState({memberList: response.data});
+            this.setState({userList: response.data});
         }).catch(error => {
-           console.log(error);
+            console.log(error);
         });
     }
 
@@ -26,7 +40,7 @@ class Chat extends Component {
                     <img alt="logo" src={logo} />
                 </div>
                 <div className="title">Razenet</div>
-                <RightSideMenu memberList={this.state.memberList} />
+                <RightSideMenu userList={this.state.userList} />
             </div>
         );
     }
