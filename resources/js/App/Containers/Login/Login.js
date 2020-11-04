@@ -57,8 +57,8 @@ class Login extends Component {
         values.email = this.state.email;
         delete values.errors;
 
-        //axios.get('/sanctum/csrf-cookie', { baseURL: ''}).then(response => {
-            axios.post(`/${this.state.form}`, values).then(response => {
+        axios.get('/sanctum/csrf-cookie', { baseURL: ''}).then(res => {
+            axios.post(`/${this.state.form}`, values, { baseURL: ''}).then(response => {
                 Object.keys(values).forEach(name => {
                    values[name] = '';
                 });
@@ -66,13 +66,7 @@ class Login extends Component {
 
                 if (this.state.form === 'login') {
                     // Login success
-
-                    // test login
-                    axios.get('/user').then(response => {
-                        console.log(response);
-                    }).catch(error => {
-                        console.log('sad');
-                    });
+                    this.props.onSuccessfulLogin(response.data);
                 } else {
                     // Register success
                     this.setState({form: 'login', register: values, loading: false, success: response.data.message});
@@ -87,10 +81,10 @@ class Login extends Component {
                     console.log(error.message);
                 }
             });
-        /*}).catch(error => {
+        }).catch(error => {
             //@TODO: Serverside error
             console.log(error);
-        });*/
+        });
     }
 
     render() {

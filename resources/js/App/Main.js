@@ -12,14 +12,20 @@ class Main extends Component {
         this.state = {
             user: null
         };
+
+        this.onSuccessfulLogin = this.onSuccessfulLogin.bind(this);
     }
 
     componentDidMount() {
         axios.get('/user').then(response => {
-
+            this.setState({user: response.data});
         }).catch(error => {
             this.setState({user: false});
         });
+    }
+
+    onSuccessfulLogin(user) {
+        this.setState({user: user});
     }
 
     render () {
@@ -34,14 +40,14 @@ class Main extends Component {
         if (this.state.user === false) {
             return (
                 <Router>
-                    <Login/>
+                    <Login onSuccessfulLogin={this.onSuccessfulLogin} />
                 </Router>
             );
         }
 
         return (
             <Router>
-                <Login/>
+
             </Router>
         );
     }

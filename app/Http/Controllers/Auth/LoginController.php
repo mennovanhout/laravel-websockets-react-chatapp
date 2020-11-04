@@ -24,9 +24,9 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, true)) {
             // Authentication passed...
-            return response(null, 204);
+            return response()->json(Auth::user()->toArray());
         } else {
             return response()->json([
                 'errors' => ['email' => ['Credentials incorrect!']]
