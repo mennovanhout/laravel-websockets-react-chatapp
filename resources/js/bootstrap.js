@@ -21,7 +21,7 @@ try {
 
 window.axios = require('axios');
 window.axios.defaults.baseURL = '/api';
-axios.defaults.withCredentials = true;
+window.axios.defaults.withCredentials = true;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -33,15 +33,14 @@ import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
-console.log(window.location.hostname);
-console.log(process.env.MIX_PISHER_PORT);
+console.log(process.env.MIX_PUSHER_PORT);
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     wsHost: window.location.hostname,
-    wsPort: process.env.MIX_PISHER_PORT,
-    forceTLS: process.env.MIX_PUSHER_SCHEME === 'https',
+    wsPort: process.env.MIX_PUSHER_PORT,
+    forceTLS: false,
     disableStats: true,
     authorizer: (channel, options) => {
         return {
@@ -49,13 +48,11 @@ window.Echo = new Echo({
                 axios.post('/broadcasting/auth', {
                     socket_id: socketId,
                     channel_name: channel.name
-                })
-                    .then(response => {
-                        callback(false, response.data);
-                    })
-                    .catch(error => {
-                        callback(true, error);
-                    });
+                }).then(response => {
+                    callback(false, response.data);
+                }).catch(error => {
+                    callback(true, error);
+                });
             }
         };
     },
