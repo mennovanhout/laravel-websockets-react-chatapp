@@ -7,8 +7,19 @@
 html, body {
     padding: 0;
     margin: 0;
+    font-family: Roboto;
 }
 
 html, body, #app {
     height: 100vh;
+}
+
+.MuiSkeleton-root {
+    background-color: rgb(121 121 121 / 11%) !important;
+}
+
+.MuiSkeleton-wave {
+    &::after {
+        background: linear-gradient(90deg, transparent, rgb(107 107 107 / 20%), transparent) !important;
+    }
 }
