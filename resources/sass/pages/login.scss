@@ -1,0 +1,19 @@
+.loginPage {
+    background: #4E66AF;
+    min-height: 100vh;
+    padding-top: 30vh;
+    box-sizing: border-box;
+
+    .loginContainer {
+        max-width: 500px;
+        margin: 0 auto;
+
+        .MuiTextField-root {
+            margin-top:16px;
+        }
+
+        p {
+            margin: 0 !important;
+        }
+    }
+}

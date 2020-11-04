@@ -1,8 +1,13 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import './pages/login';
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+html, body, #app {
+    height: 100vh;
+}
