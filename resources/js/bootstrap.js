@@ -33,17 +33,16 @@ import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
-console.log(process.env.MIX_PUSHER_PROD);
-console.log(process.env.MIX_PUSHER_PROD == true ? 6002 : 6001);
+const prod = Boolean(process.env.MIX_PUSHER_PROD);
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
     wsHost: window.location.hostname,
     wssHost: window.location.hostname,
-    wsPort: process.env.MIX_PUSHER_PROD == true ? 6002 : 6001,
-    wssPort: process.env.MIX_PUSHER_PROD == true ? 6002 : 6001,
-    forceTLS: process.env.MIX_PUSHER_PROD == true,
+    wsPort: prod ? 6002 : 6001,
+    wssPort: prod ? 6002 : 6001,
+    forceTLS: prod,
     disableStats: true,
     authorizer: (channel, options) => {
         return {
