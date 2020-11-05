@@ -33,6 +33,8 @@ import Echo from 'laravel-echo';
 
 window.Pusher = require('pusher-js');
 
+console.log(process.env.MIX_PUSHER_PROD);
+console.log(process.env.MIX_PUSHER_PROD == true ? 6002 : 6001);
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
