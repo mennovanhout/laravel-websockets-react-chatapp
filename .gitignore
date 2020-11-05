@@ -5,6 +5,8 @@
 /vendor
 /public/css
 /public/js
+/public/*.mp3
+/public/*.js
 .env
 .env.backup
 .phpunit.result.cache

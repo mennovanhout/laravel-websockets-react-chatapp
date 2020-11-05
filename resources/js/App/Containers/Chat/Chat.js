@@ -4,6 +4,7 @@ import LeftSideMenu from "../../Components/LeftSideMenu/LeftSideMenu";
 import Message from "../../Components/Chat/Message/Message";
 import TextField from "@material-ui/core/TextField";
 import {Skeleton} from "@material-ui/lab";
+import {withSounds} from "../../HOC/withSounds";
 
 class Chat extends Component {
     constructor(props) {
@@ -98,6 +99,8 @@ class Chat extends Component {
 
         this.setState({messages: messages});
 
+        this.props.playNewMessage();
+
         this.scrollToBottom();
     }
 
@@ -143,4 +146,4 @@ class Chat extends Component {
     }
 }
 
-export default Chat;
+export default withSounds(Chat);

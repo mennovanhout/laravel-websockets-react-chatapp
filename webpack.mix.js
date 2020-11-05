@@ -11,5 +11,16 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    module: {
+        rules: [
+            {
+                test: /\.mp3$/,
+                loader: 'file-loader',
+            },
+        ],
+    },
+});
+
 mix.react('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
