@@ -45,13 +45,13 @@ const RightSideMenu = props => {
         });
 
         // Sort roles
-        const roleValues = Object.entries(roles).sort(([,a],[,b]) => b.sort-a.sort);
+        const roleValues = Object.entries(roles).sort(([,a],[,b]) => a.sort-b.sort);
 
         users = roleValues.map(role => (
                 <React.Fragment key={role[1].id}>
                     <span>{ role[1].name }</span>
                     <ul style={{color: role[1].color}}>
-                        { role[1].users.map(user => <li key={user.id} className={!props.onlineUsers.includes(user.id) ? 'offline' : null}>{user.username}</li>) }
+                        { role[1].users.sort(user => props.onlineUsers.includes(user.id) ? -1 : 1).map(user => <li key={user.id} className={!props.onlineUsers.includes(user.id) ? 'offline' : null}>{user.username}</li>) }
                     </ul>
                 </React.Fragment>
             ));
