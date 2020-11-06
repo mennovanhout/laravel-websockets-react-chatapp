@@ -66,7 +66,7 @@ class Chat extends Component {
 
     updateUserList() {
         axios.get('/users/list').then(response => {
-            this.setState({userList: response.data});
+            this.setState({userList: response.data.data});
         }).catch(error => {
             console.log(error);
         });

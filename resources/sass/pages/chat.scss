@@ -37,11 +37,10 @@
 
             li {
                 padding: 5px 16px;
-                color:#63d275;
             }
 
             li.offline {
-                color:#47754e;
+                opacity: .5;
             }
         }
     }

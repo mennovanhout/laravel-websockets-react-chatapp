@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * App\Models\User
@@ -48,6 +49,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'role_id',
         'email',
         'password',
     ];
@@ -75,8 +77,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function assignRole(Role $role) {
+        $this->role_id = $role->id;
+        $this->save();
     }
 }

@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function list() {
-        return response()->json(
-            User::select(['id', 'username'])->get()->toArray()
-        );
+        return \App\Http\Resources\User::collection(User::all());
     }
 }

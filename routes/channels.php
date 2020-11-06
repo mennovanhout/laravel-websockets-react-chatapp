@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -14,7 +15,8 @@ use Illuminate\Support\Facades\Broadcast;
 */
 Broadcast::channel('chat', function ($user) {
     if ($user !== null) {
-        return ['id' => $user->id, 'username' => $user->username];
+        $resource = new \App\Http\Resources\User($user);
+        return json_decode($resource->toJson(), true);
     }
 
     return null;

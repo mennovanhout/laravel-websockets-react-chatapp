@@ -15,7 +15,8 @@ class ChatController extends Controller
 
         $data['user_id'] = $request->user()->id;
 
-        $message = Message::create($data);
+        /** @var Message $message */
+        $message = Message::create($data)->load(['user', 'user.role']);
 
         NewMessage::dispatch($message);
 
@@ -23,6 +24,6 @@ class ChatController extends Controller
     }
 
     public function retrieve(Request $request) {
-        return \App\Http\Resources\Message::collection(Message::all());
+        return \App\Http\Resources\Message::collection(Message::with(['user', 'user.role'])->get());
     }
 }
